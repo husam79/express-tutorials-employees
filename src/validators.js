@@ -11,9 +11,12 @@ export function validateWholeEmployee(employee){
 }
 
 export function validatePartOfEmployee(employee){
-    let result = !!employee.name || !!employee.age;
-    if(employee.age){
-        result = result && !isNaN(Number(employee.age));
+    if(!employee.name && !employee.age){
+      throw new Error("You have to send at least age or name");
     }
-    return result;
+    if(employee.age){
+        if(isNaN(Number(employee.age))){
+            throw new Error("The age parameter should be a number");
+        }
+    }
 }
