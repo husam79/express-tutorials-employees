@@ -27,7 +27,7 @@ export default class MemoryEmployeeRepository{
         if(!employee){
             throw new Error("Employee not found!")
         }
-        this.filterOutEmployee(id);
+        MemoryEmployeeRepository.employees = this.filterOutEmployee(id);
     }
 
     add(employee){
@@ -53,7 +53,7 @@ export default class MemoryEmployeeRepository{
         
         employee = {...employee, ...employeeRequest};
 
-        this.filterOutEmployee(id);
+        MemoryEmployeeRepository.employees = this.filterOutEmployee(id);
         MemoryEmployeeRepository.employees.push(employee);
     }
 }
