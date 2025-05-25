@@ -9,3 +9,6 @@ app.use('/', employeesRouter);
 
 
 app.listen(PORT, () => console.log(`I am listening on port: ${PORT}`));
+
+
+//REQUEST (flutter app) => express.json => extractEmployeeData => SERVER (Routes -> Controller -> Respository) => RESPONSE (data)
