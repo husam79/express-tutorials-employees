@@ -3,18 +3,18 @@ import {
     validatePartOfEmployee 
 } from '../validators.js';
 
-import MemoryEmployeeRepository from '../MemoryEmployeeRepository.js';
+import MonogEmployeeRepository from './employees.repository.js';
 
-export function getAllEmployees(request, response) {
-    const repository = new MemoryEmployeeRepository();
-    response.json(repository.getAll());
+export async function getAllEmployees(request, response) {
+    const repository = new MonogEmployeeRepository();
+    response.json(await repository.getAll());
 }
 
-export function getEmployee(request, response) {
+export async function getEmployee(request, response) {
     const id = request.params.id;
 
-    const repository = new MemoryEmployeeRepository();
-    const employee = repository.getById(id);
+    const repository = new MonogEmployeeRepository();
+    const employee = await repository.getById(id);
 
     if(!employee){
         response.sendStatus(404);
@@ -23,45 +23,27 @@ export function getEmployee(request, response) {
     }
 }
 
-export function addEmployee(request, response) {
-    try{
-        const employee = request.body;
-        console.log(employee)
-        //validate data sent from the user.
-        validateWholeEmployee(employee);
+export async function addEmployee(request, response) {
+    const repository = new MonogEmployeeRepository();
+    await repository.add(request.employee);
 
-        const repository = new MemoryEmployeeRepository();
-        repository.add(employee);
-
-        response.sendStatus(200);
-    } catch(error){
-        response.status(400).json({success: false, error: error.message});
-    }
+    response.sendStatus(200);
 }
 
-export function updateEmployee(request, response) {
-    try{
-        const id = request.params.id;
-        const employee = request.body;
+export async function updateEmployee(request, response) {
+    const id = request.params.id;
+    const repository = new MonogEmployeeRepository();
+    await repository.update(id, employee);
 
-        //validate data sent from the user.
-        validateWholeEmployee(employee);
-
-        const repository = new MemoryEmployeeRepository();
-        repository.update(id, employee);
-
-        response.sendStatus(200);
-    } catch(error){
-        response.status(400).json({success: false, error: error.message});
-    }
+    response.sendStatus(200);
 }
 
-export function deleteEmployee(request, response) {
+export async function deleteEmployee(request, response) {
     try{
         const id = request.params.id;
 
-        const repository = new MemoryEmployeeRepository();
-        repository.delete(id);
+        const repository = new MonogEmployeeRepository();
+        await repository.delete(id);
         
         response.sendStatus(200);
     } catch(error){
@@ -69,15 +51,15 @@ export function deleteEmployee(request, response) {
     }
 }
 
-export function patchEmployee(request, response) {
+export async function patchEmployee(request, response) {
     try{
         const id = request.params.id;
         const employee = request.body;
         
         validatePartOfEmployee(employee);
 
-        const repository = new MemoryEmployeeRepository();
-        repository.patch(id, employee);
+        const repository = new MonogEmployeeRepository();
+        await repository.patch(id, employee);
 
         response.sendStatus(200);
     } catch(error){
