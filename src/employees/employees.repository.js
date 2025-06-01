@@ -11,6 +11,11 @@ export default class MonogEmployeeRepository{
         return employee;
     }
 
+    async getByUsername(username){
+        let employee = await Employee.findOne({username: username});
+        return employee;
+    }
+
     async delete(id){
         let employee = await Employee.findByIdAndDelete(id);
         if(!employee){

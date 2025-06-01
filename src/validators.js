@@ -1,4 +1,10 @@
 export function validateWholeEmployee(employee){
+    if(!employee.username){
+        throw new Error("The username parameter is missing")
+    }
+    if(!employee.password){
+        throw new Error("The password parameter is missing")
+    }
     if(!employee.name){
         throw new Error("The name parameter is missing");
     }
