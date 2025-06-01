@@ -2,7 +2,7 @@ import {
     validateWholeEmployee, 
     validatePartOfEmployee 
 } from '../validators.js';
-
+import bcrypt from 'bcrypt';
 
 export async function getAllEmployees(request, response) {
     response.json(await request.employeesRepo.getAll());
@@ -21,6 +21,7 @@ export async function getEmployee(request, response) {
 }
 
 export async function addEmployee(request, response) {
+    request.employee.password = await bcrypt.hash(request.employee.password, 10);
     await request.employeesRepo.add(request.employee);
 
     response.sendStatus(200);

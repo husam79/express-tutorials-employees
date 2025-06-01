@@ -1,6 +1,7 @@
 import express from 'express';
 import employeesRouter from './employees/employees.routes.js';
-import attendaceRouter from './attendance/attendance.route.js'
+import attendaceRouter from './attendance/attendance.route.js';
+import authRouter from './auth/auth.routes.js';
 import mongoose from 'mongoose';
 import SettingRepositoriesMiddleware from './middlewares/setting-repositories-middleware.js';
 
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(SettingRepositoriesMiddleware);
 app.use('/', employeesRouter);
 app.use('/', attendaceRouter);
-
+app.use('/', authRouter);
 
 app.listen(PORT, () => console.log(`I am listening on port: ${PORT}`));
 
