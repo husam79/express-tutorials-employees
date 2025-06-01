@@ -3,18 +3,15 @@ import {
     validatePartOfEmployee 
 } from '../validators.js';
 
-import MonogEmployeeRepository from './employees.repository.js';
 
 export async function getAllEmployees(request, response) {
-    const repository = new MonogEmployeeRepository();
-    response.json(await repository.getAll());
+    response.json(await request.employeesRepo.getAll());
 }
 
 export async function getEmployee(request, response) {
     const id = request.params.id;
 
-    const repository = new MonogEmployeeRepository();
-    const employee = await repository.getById(id);
+    const employee = await request.employeesRepo.getById(id);
 
     if(!employee){
         response.sendStatus(404);
@@ -24,16 +21,14 @@ export async function getEmployee(request, response) {
 }
 
 export async function addEmployee(request, response) {
-    const repository = new MonogEmployeeRepository();
-    await repository.add(request.employee);
+    await request.employeesRepo.add(request.employee);
 
     response.sendStatus(200);
 }
 
 export async function updateEmployee(request, response) {
     const id = request.params.id;
-    const repository = new MonogEmployeeRepository();
-    await repository.update(id, employee);
+    await request.employeesRepo.update(id, employee);
 
     response.sendStatus(200);
 }
@@ -42,8 +37,7 @@ export async function deleteEmployee(request, response) {
     try{
         const id = request.params.id;
 
-        const repository = new MonogEmployeeRepository();
-        await repository.delete(id);
+        await request.employeesRepo.delete(id);
         
         response.sendStatus(200);
     } catch(error){
@@ -58,8 +52,7 @@ export async function patchEmployee(request, response) {
         
         validatePartOfEmployee(employee);
 
-        const repository = new MonogEmployeeRepository();
-        await repository.patch(id, employee);
+        await request.employeesRepo.patch(id, employee);
 
         response.sendStatus(200);
     } catch(error){
