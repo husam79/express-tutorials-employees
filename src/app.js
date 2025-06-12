@@ -4,6 +4,7 @@ import attendaceRouter from './attendance/attendance.route.js';
 import authRouter from './auth/auth.routes.js';
 import mongoose from 'mongoose';
 import SettingRepositoriesMiddleware from './middlewares/setting-repositories-middleware.js';
+import validateToken from './middlewares/validate-token.js';
 
 mongoose.connect('mongodb://127.0.0.1:27017/employees_db');
 
@@ -12,9 +13,12 @@ const app = express();
 
 app.use(express.json());
 app.use(SettingRepositoriesMiddleware);
+
+app.use('/', authRouter);
+
+app.use(validateToken);
 app.use('/', employeesRouter);
 app.use('/', attendaceRouter);
-app.use('/', authRouter);
 
 app.listen(PORT, () => console.log(`I am listening on port: ${PORT}`));
 
