@@ -10,7 +10,8 @@ const emplyeeSchema = new mongoose.Schema(
         name: String,
         age: Number,
         password: String,
-        token: {type: String, unique: true}
+        token: String,
+        role: {type: String, enum: ['admin', 'normal'], default: 'normal'}
     }
 );
 const Employee = mongoose.model('Employee', emplyeeSchema);
