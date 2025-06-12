@@ -2,6 +2,10 @@
 
 A simple REST API demonstration using Express.js for managing employee records (currently we have three properties only: id, name, and age).
 
+## Permissions & Roles
+admin: can do everything except adding in-out operations for another employee.
+normal: can only attend: in or out, and get a report of in-out logs.
+
 ## Features
 
 - CRUD operations for employee management
