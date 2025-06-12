@@ -5,7 +5,14 @@ import {
 import bcrypt from 'bcrypt';
 
 export async function getAllEmployees(request, response) {
-    response.json(await request.employeesRepo.getAll());
+    const employees =  await request.employeesRepo.getAll();
+
+    response.json(employees.map(e => ({
+        id: e._id,
+        username: e.username,
+        name: e.name,
+        age: e.age
+    }) ));
 }
 
 export async function getEmployee(request, response) {
@@ -16,7 +23,12 @@ export async function getEmployee(request, response) {
     if(!employee){
         response.sendStatus(404);
     } else {
-        response.json(employee);
+        response.json({
+            id: employee._id,
+            username: employee.username,
+            name: employee.name,
+            age: employee.age
+        });
     }
 }
 
