@@ -16,8 +16,35 @@ const extractAttendanceData = (request, response, next) => {
     }
 };
 
-router.post('/attendance', extractAttendanceData,  addAttendace);
-router.get('/attendance', getAllAttendances);
-router.get('/attendance/:employeeId', getAllAttendancesOfEmployee);
+const authorizeAdminRole = (request, response, next) => {
+    if(request.authUser.role !== 'admin') {
+        return response.sendStatus(403);
+    }
+
+    next();
+}
+
+const authorizeSameIdentityOrAdmin = (request, response, next) => {
+    if(
+        request.authUser._id.toString() !== request.params.employeeId &&
+        request.authUser.role !== 'admin'
+    ){
+        return response.sendStatus(403);
+    }
+
+    next();
+}
+
+const authorizeSameIdentity = (request, response, next) => {
+    if(request.authUser._id.toString() !== request.params.employeeId){
+        return response.sendStatus(403);
+    }
+
+    next();
+}
+
+router.post('/attendance', extractAttendanceData, authorizeSameIdentity, addAttendace);
+router.get('/attendance', authorizeAdminRole, getAllAttendances);
+router.get('/attendance/:employeeId', authorizeSameIdentityOrAdmin, getAllAttendancesOfEmployee);
 
 export default router;

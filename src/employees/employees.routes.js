@@ -16,11 +16,20 @@ const extractWholeEmployeeData = (request, response, next) => {
     }
 };
 
+router.use((request, response, next) => {
+    if(request.authUser.role !== 'admin'){
+        return response.sendStatus(403);
+    }
+
+    next();
+});
+
 router.get('/employees', getAllEmployees);
 router.get('/employees/:id', getEmployee);
 router.post('/employees', extractWholeEmployeeData, addEmployee);
 router.put('/employees/:id', extractWholeEmployeeData, updateEmployee);
 router.delete('/employees/:id', deleteEmployee);
 router.patch('/employees/:id', patchEmployee);
+
 
 export default router;
