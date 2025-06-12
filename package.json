@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "prod": "node src/app.js"
+    "prod": "node src/app.js",
+    "admin_seed": "node src/seeds/admin-seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "boxen": "^8.0.1",
     "express": "^5.1.0",
     "mongoose": "^8.15.0"
   },
