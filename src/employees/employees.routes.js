@@ -1,6 +1,7 @@
 import express from 'express';
 import { addEmployee, deleteEmployee, getAllEmployees, getEmployee, patchEmployee, updateEmployee } from './employees.controller.js';
 import { validateWholeEmployee } from '../validators.js';
+import wrapper from '../shared/wrapper.js';
 
 const router = express.Router();
 
@@ -12,24 +13,26 @@ const extractWholeEmployeeData = (request, response, next) => {
         request.employee = employee;
         next();
     } catch(error){
-        response.status(400).json({success: false, error: error.message});
+        next(error);
     }
 };
 
 router.use((request, response, next) => {
     if(request.authUser.role !== 'admin'){
-        return response.sendStatus(403);
+        return next(
+            new NotAuthorizedError("You don't have a permission to access to this resource")
+        );
     }
 
     next();
 });
 
-router.get('/employees', getAllEmployees);
-router.get('/employees/:id', getEmployee);
-router.post('/employees', extractWholeEmployeeData, addEmployee);
-router.put('/employees/:id', extractWholeEmployeeData, updateEmployee);
-router.delete('/employees/:id', deleteEmployee);
-router.patch('/employees/:id', patchEmployee);
+router.get('/employees', wrapper(getAllEmployees));
+router.get('/employees/:id', wrapper(getEmployee));
+router.post('/employees', extractWholeEmployeeData, wrapper(addEmployee));
+router.put('/employees/:id', extractWholeEmployeeData, wrapper(updateEmployee));
+router.delete('/employees/:id', wrapper(deleteEmployee));
+router.patch('/employees/:id', wrapper(patchEmployee));
 
 
 export default router;

@@ -1,3 +1,4 @@
+import NotFoundError from "../shared/errors/not-found-error.js";
 import Employee from "./employees.model.js";
 
 export default class MonogEmployeeRepository{
@@ -24,7 +25,7 @@ export default class MonogEmployeeRepository{
     async delete(id){
         let employee = await Employee.findByIdAndDelete(id);
         if(!employee){
-            throw new Error("Employee not found!")
+            throw new NotFoundError("Employee not found!")
         }
     }
 
@@ -38,7 +39,7 @@ export default class MonogEmployeeRepository{
             id, employeeRequest, {new: true}
         );
         if(!employee){
-            throw new Error("Employee not found!")
+            throw new NotFoundError("Employee not found!")
         }
     }
 
