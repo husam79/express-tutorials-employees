@@ -47,28 +47,20 @@ export async function updateEmployee(request, response) {
 }
 
 export async function deleteEmployee(request, response) {
-    try{
-        const id = request.params.id;
+    const id = request.params.id;
 
-        await request.employeesRepo.delete(id);
-        
-        response.sendStatus(200);
-    } catch(error){
-        response.status(404).json({success: false, error: error.message});
-    }
+    await request.employeesRepo.delete(id);
+    
+    response.sendStatus(200);
 }
 
 export async function patchEmployee(request, response) {
-    try{
-        const id = request.params.id;
-        const employee = request.body;
-        
-        validatePartOfEmployee(employee);
+    const id = request.params.id;
+    const employee = request.body;
+    
+    validatePartOfEmployee(employee);
 
-        await request.employeesRepo.patch(id, employee);
+    await request.employeesRepo.patch(id, employee);
 
-        response.sendStatus(200);
-    } catch(error){
-        response.status(400).json({success: false, error: error.message});
-    }
+    response.sendStatus(200);
 }

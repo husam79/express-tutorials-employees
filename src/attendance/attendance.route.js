@@ -1,6 +1,8 @@
 import express from 'express';
 import { addAttendace, getAllAttendances, getAllAttendancesOfEmployee } from './attendance.controller.js';
 import {validateAttendance} from '../validators.js';
+import wrapper from '../shared/wrapper.js';
+import NotAuthorizedError from '../shared/errors/not-authorized-error.js';
 
 const router = express.Router();
 
@@ -12,13 +14,13 @@ const extractAttendanceData = (request, response, next) => {
         request.attendance = attendance;
         next();
     } catch(error){
-        response.status(400).json({success: false, error: error.message});
+        next(error);
     }
 };
 
 const authorizeAdminRole = (request, response, next) => {
     if(request.authUser.role !== 'admin') {
-        return response.sendStatus(403);
+        next(new NotAuthorizedError("You don't have a permission to access to this resource"))
     }
 
     next();
@@ -29,7 +31,7 @@ const authorizeSameIdentityOrAdmin = (request, response, next) => {
         request.authUser._id.toString() !== request.params.employeeId &&
         request.authUser.role !== 'admin'
     ){
-        return response.sendStatus(403);
+        next(new NotAuthorizedError("You don't have a permission to access to this resource"))
     }
 
     next();
@@ -37,14 +39,14 @@ const authorizeSameIdentityOrAdmin = (request, response, next) => {
 
 const authorizeSameIdentity = (request, response, next) => {
     if(request.authUser._id.toString() !== request.params.employeeId){
-        return response.sendStatus(403);
+        next(new NotAuthorizedError("You don't have a permission to access to this resource"))
     }
 
     next();
 }
 
-router.post('/attendance', extractAttendanceData, authorizeSameIdentity, addAttendace);
-router.get('/attendance', authorizeAdminRole, getAllAttendances);
-router.get('/attendance/:employeeId', authorizeSameIdentityOrAdmin, getAllAttendancesOfEmployee);
+router.post('/attendance', extractAttendanceData, authorizeSameIdentity, wrapper(addAttendace));
+router.get('/attendance', authorizeAdminRole, wrapper(getAllAttendances));
+router.get('/attendance/:employeeId', authorizeSameIdentityOrAdmin, wrapper(getAllAttendancesOfEmployee));
 
 export default router;
