@@ -6,6 +6,9 @@ import mongoose from 'mongoose';
 import SettingRepositoriesMiddleware from './middlewares/setting-repositories-middleware.js';
 import validateToken from './middlewares/validate-token.js';
 import errorHandler from './middlewares/error-handler.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 mongoose.connect('mongodb://127.0.0.1:27017/employees_db');
 
