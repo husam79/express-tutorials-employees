@@ -18,6 +18,13 @@ export default function errorHandler(error, request, response, next){
         }
     }
 
+    // Check for custom errors originated from our code
+    if(error.http_code){
+        return response.status(error.http_code).json({
+                success: false,
+                message: error.message
+            });
+    }
 
     // Catch any error.
     return response.status(500).json({
